@@ -1,6 +1,7 @@
-import { useEffect } from 'react'
+import { useContext } from 'react'
 import { Header } from '../../components/Header'
 import { Summary } from '../../components/Summary'
+import { TransactionContext } from '../../contexts/TransactionsContext'
 import { SearchForm } from './components/SearchForm'
 import {
   PriceHightlight,
@@ -10,11 +11,9 @@ import {
 
 export function Transactions() {
   // colocando o fetch no useEffect para executar somente uma vez
-  useEffect(() => {
-    fetch('http://localhost:3000/transactions').then((res) =>
-      res.json().then((data) => console.log(data)),
-    )
-  })
+
+  const { transactions } = useContext(TransactionContext)
+
   return (
     <div>
       <Header />
@@ -24,22 +23,20 @@ export function Transactions() {
         <SearchForm />
         <TransactionsTable>
           <tbody>
-            <tr>
-              <td width="50%">Desenvolvimento do site</td>
-              <td>
-                <PriceHightlight variant="income">R$ 12.000,00</PriceHightlight>
-              </td>
-              <td>Venda</td>
-              <td>13/03/2023</td>
-            </tr>
-            <tr>
-              <td width="50%">Hamburguer</td>
-              <td>
-                <PriceHightlight variant="outcome">- R$ 59,00</PriceHightlight>
-              </td>
-              <td>Alimentação</td>
-              <td>13/03/2023</td>
-            </tr>
+            {transactions.map((transaction) => {
+              return (
+                <tr key={transaction.id}>
+                  <td width="50%">{transaction.description}</td>
+                  <td>
+                    <PriceHightlight variant={transaction.type}>
+                      {transaction.price}
+                    </PriceHightlight>
+                  </td>
+                  <td>{transaction.category}</td>
+                  <td>{transaction.createdAt}</td>
+                </tr>
+              )
+            })}
           </tbody>
         </TransactionsTable>
       </TransactionsContainer>
