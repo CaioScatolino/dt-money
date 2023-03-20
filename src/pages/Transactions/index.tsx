@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContextSelector } from 'use-context-selector'
 import { Header } from '../../components/Header'
 import { Summary } from '../../components/Summary'
 import { TransactionContext } from '../../contexts/TransactionsContext'
@@ -13,7 +13,9 @@ import {
 export function Transactions() {
   // colocando o fetch no useEffect para executar somente uma vez
 
-  const { transactions } = useContext(TransactionContext)
+  const transactions = useContextSelector(TransactionContext, (context) => {
+    return context.transactions
+  })
 
   return (
     <div>
